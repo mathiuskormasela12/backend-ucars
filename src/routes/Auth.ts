@@ -7,7 +7,7 @@ import RouterModule from './Router';
 import authControlerModule from '../controllers/Auth';
 
 // import all middlewares
-import { registerAndLoginMiddleware } from '../middlewares/auth';
+import { registerAndLoginMiddleware, checkGenerateAccessTokenForm } from '../middlewares/auth';
 
 namespace AuthRoutesModul {
 	export class AuthRoutes extends RouterModule.Router {
@@ -19,6 +19,7 @@ namespace AuthRoutesModul {
 	  public routes(): void {
 	    this.expressRouter.post('/register', registerAndLoginMiddleware, authControlerModule.AuthControllers.register);
 	    this.expressRouter.post('/login', registerAndLoginMiddleware, authControlerModule.AuthControllers.login);
+	    this.expressRouter.post('/access-token', checkGenerateAccessTokenForm, authControlerModule.AuthControllers.generateAccessToken);
 	  }
 
 	  public get authRoutes(): ExpressRouter {

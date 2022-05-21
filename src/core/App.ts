@@ -13,6 +13,7 @@ import { appConfig } from '../config';
 
 // import all routes
 import authRoutes from '../routes/Auth';
+import carsRoutes from '../routes/Cars';
 
 namespace AppModule {
 	export class App {
@@ -64,6 +65,7 @@ namespace AppModule {
 
 	    // routes
 	    this.app.use('/api/v1/auth', authRoutes.authRoutes);
+	    this.app.use('/api/v1/cars', carsRoutes.carsRoutes);
 	  }
 
 	  public listen(): void {

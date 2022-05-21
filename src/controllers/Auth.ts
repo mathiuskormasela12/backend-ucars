@@ -2,6 +2,7 @@
 // import all modules
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { generateToken, response } from '../helpers';
 import UsersModel from '../models/users';
 import { appConfig } from '../config';
@@ -65,6 +66,36 @@ namespace AuthControllersModule {
 	      return response(req, res, 200, true, 'Login successfully', { accessToken, refreshToken });
 	    } catch (err: any) {
 	      return response(req, res, 500, false, err.message);
+	    }
+	  }
+
+	  public static async generateAccessToken(
+	    req: ExpressRequest,
+	    res: ExpressResponse,
+	  ): Promise<ExpressResponse> {
+	    const { refreshToken } = req.body;
+
+	    try {
+	      const decode: any = await jwt.verify(refreshToken, appConfig.jwtRefreshTokenSecretKey);
+
+	      const newAccessToken: string = generateToken(
+	        {
+	        	id: decode.id,
+	        },
+	      appConfig.jwtAcessTokenSecretKey,
+	      appConfig.jwtAccessTokenExpiresIn,
+	      );
+	      const newRefreshToken: string = generateToken(
+	        {
+	        id: decode.id,
+	        },
+	      appConfig.jwtRefreshTokenSecretKey,
+	      appConfig.jwtRefreshTokenExpiresIn,
+	      );
+
+	      return response(req, res, 200, true, 'Access token has been created successfully', { accessToken: newAccessToken, refreshToken: newRefreshToken });
+	    } catch (err: any) {
+	      return response(req, res, 400, false, err.message);
 	    }
 	  }
 	}
