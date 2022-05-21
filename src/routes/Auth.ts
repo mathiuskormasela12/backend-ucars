@@ -6,6 +6,9 @@ import RouterModule from './Router';
 // import all controllers
 import authControlerModule from '../controllers/Auth';
 
+// import all middlewares
+import { registerAndLoginMiddleware } from '../middlewares/auth';
+
 namespace AuthRoutesModul {
 	export class AuthRoutes extends RouterModule.Router {
 	  constructor() {
@@ -14,7 +17,8 @@ namespace AuthRoutesModul {
 	  }
 
 	  public routes(): void {
-	    this.expressRouter.get('/register', authControlerModule.AuthControllers.register);
+	    this.expressRouter.post('/register', registerAndLoginMiddleware, authControlerModule.AuthControllers.register);
+	    this.expressRouter.post('/login', registerAndLoginMiddleware, authControlerModule.AuthControllers.login);
 	  }
 
 	  public get authRoutes(): ExpressRouter {
