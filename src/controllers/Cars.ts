@@ -1,8 +1,9 @@
 // ========== Cars Controllers
 // import all modules
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
-import { response } from '../helpers';
+import { response, upload, deletFile } from '../helpers';
 import CarModels from '../models/carModels';
+import Cars from '../models/cars';
 
 namespace CarsControllersModule {
 	export class CarsControllers {
@@ -22,8 +23,8 @@ namespace CarsControllersModule {
 	      const data = new CarModels({ modelName, year });
 
 	      try {
-	        await data.save();
-	        return response(req, res, 200, true, 'The new car model has been created successfully');
+	        const results = await data.save();
+	        return response(req, res, 200, true, 'The new car model has been created successfully', results);
 	      } catch (err: any) {
 	        return response(req, res, 500, false, err.message);
 	      }
@@ -95,6 +96,135 @@ namespace CarsControllersModule {
 	      try {
 	        await CarModels.deleteOne({ _id: id });
 	        return response(req, res, 200, true, 'The car model has been deleted successfully');
+	      } catch (err: any) {
+	        return response(req, res, 500, false, err.message);
+	      }
+	    } catch (err: any) {
+	      return response(req, res, 500, false, err.message);
+	    }
+	  }
+
+	  public static async addCarBrand(
+	    req: ExpressRequest,
+	    res: ExpressResponse,
+	  ): Promise<ExpressResponse> {
+	    const {
+	      name,
+	      carModelId,
+	      description,
+	      year,
+	    } = req.body;
+
+	    try {
+	      const cars = await Cars.findOne({ carModelId });
+
+	      if (cars) {
+	        return response(req, res, 400, false, 'The brand already exists');
+	      }
+
+	      const logo: any = upload(req);
+
+	      if (!logo.success) {
+	        return response(req, res, 400, false, logo.message);
+	      }
+
+	      const data = new Cars({
+	        name,
+	        carModelId,
+	        description,
+	        year,
+	        logo: logo.logo,
+	      });
+
+	      try {
+	        const results = await data.save();
+	        return response(req, res, 200, true, 'The new car model has been created successfully', results);
+	      } catch (err: any) {
+	        return response(req, res, 500, false, err.message);
+	      }
+	    } catch (err: any) {
+	      return response(req, res, 500, false, err.message);
+	    }
+	  }
+
+	  public static async updateCarBrand(
+	    req: ExpressRequest,
+	    res: ExpressResponse,
+	  ): Promise<ExpressResponse> {
+	    const {
+	      name,
+	      carModelId,
+	      description,
+	      year,
+	    } = req.body;
+
+	    const { id } = req.params;
+
+	    try {
+	      const cars = await Cars.findOne({ carModelId });
+
+	      if (!cars) {
+	        return response(req, res, 400, false, 'The brand does not exist');
+	      }
+
+	      if (req.files && req.files.logo) {
+	        const logo: any = upload(req);
+
+	      if (!logo.success) {
+	        return response(req, res, 400, false, logo.message);
+	      }
+
+	      deletFile(`/uploads/${cars.logo}`);
+
+	      try {
+	        await Cars.updateOne({ id }, {
+	          name,
+	          carModelId,
+	          description,
+	          year,
+	          logo: logo.logo,
+	        });
+	        return response(req, res, 200, true, 'The car brand has been updated successfully');
+	      } catch (err: any) {
+	        return response(req, res, 500, false, err.message);
+	      }
+	      }
+
+	      try {
+	        await Cars.updateOne({ id }, {
+	          name,
+	          carModelId,
+	          description,
+	          year,
+	          logo: cars.logo,
+	        });
+	        return response(req, res, 200, true, 'The car brand has been updated successfully');
+	      } catch (err: any) {
+	        return response(req, res, 500, false, err.message);
+	      }
+	    } catch (err: any) {
+	      return response(req, res, 500, false, err.message);
+	    }
+	  }
+
+	  public static async deleteCarBrand(
+	    req: ExpressRequest,
+	    res: ExpressResponse,
+	  ): Promise<ExpressResponse> {
+	    const { id } = req.params;
+
+	    try {
+	      const cars = await Cars.findById(id);
+
+	      if (!cars) {
+	        return response(req, res, 400, false, 'The brand does not exist');
+	      }
+
+	      try {
+	        const result = await Cars.deleteOne({ _id: id });
+
+	        if (result.deletedCount > 0) deletFile(`/uploads/${cars.logo}`);
+	        return response(req, res, 200, true, 'The car brand has been deleted successfully');
 	      } catch (err: any) {
 	        return response(req, res, 500, false, err.message);
 	      }

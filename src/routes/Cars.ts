@@ -1,6 +1,7 @@
 // ========== Cars Routes
 // import all modules
 import { Router as ExpressRouter } from 'express';
+import upload from 'express-fileupload';
 import RouterModule from './Router';
 
 // import all controllers
@@ -13,12 +14,18 @@ import {
   checkGetAllCarModelsQueries,
   checkUpdateCarModelForm,
   checkDeleteCarModelForm,
+  checkAddCarBrandForm,
+  checkUpdateCarBrandForm,
+  checkDeleteCarBrandForm,
 } from '../middlewares/cars';
 
 namespace CarsRoutesModul {
 	export class CarsRoutes extends RouterModule.Router {
 	  constructor() {
 	    super();
+	    this.expressRouter.use(upload({
+	      createParentPath: true,
+	    }));
 	    this.routes();
 	  }
 
@@ -27,6 +34,9 @@ namespace CarsRoutesModul {
 	    this.expressRouter.get('/model', isLoggedIn, checkGetAllCarModelsQueries, carsControlerModule.CarsControllers.getCarModels);
 	    this.expressRouter.put('/model/:id', isLoggedIn, checkUpdateCarModelForm, carsControlerModule.CarsControllers.updateCarModel);
 	    this.expressRouter.delete('/model/:id', isLoggedIn, checkDeleteCarModelForm, carsControlerModule.CarsControllers.deleteCarModel);
+	    this.expressRouter.post('/brand', isLoggedIn, checkAddCarBrandForm, carsControlerModule.CarsControllers.addCarBrand);
+	    this.expressRouter.put('/brand/:id', isLoggedIn, checkUpdateCarBrandForm, carsControlerModule.CarsControllers.updateCarBrand);
+	    this.expressRouter.delete('/brand/:id', isLoggedIn, checkDeleteCarBrandForm, carsControlerModule.CarsControllers.deleteCarBrand);
 	  }
 
 	  public get carsRoutes(): ExpressRouter {

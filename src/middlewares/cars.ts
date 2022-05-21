@@ -73,3 +73,62 @@ export const checkDeleteCarModelForm = [
     return next();
   },
 ];
+
+export const checkAddCarBrandForm = [
+  check('name', "The name can't be empty").notEmpty(),
+  check('name', 'The name must be a string').isString(),
+  check('carModelId', "The carModelId can't be empty").notEmpty(),
+  check('carModelId', 'The carModelId is invalid').isMongoId(),
+  check('year', "The year field can't be empty").notEmpty(),
+  check('year', 'The year field must be a number').isInt(),
+  check('description', "The description can't be empty").notEmpty(),
+  check('description', 'The description must be a string').isString(),
+
+  (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return response(req, res, 400, false, errors.array()[0].msg);
+    }
+
+    return next();
+  },
+];
+
+export const checkUpdateCarBrandForm = [
+  param('id', 'The id must be a string').isString(),
+  param('id', 'The id is invalid').isMongoId(),
+  check('name', "The name can't be empty").notEmpty(),
+  check('name', 'The name must be a string').isString(),
+  check('carModelId', "The carModelId can't be empty").notEmpty(),
+  check('carModelId', 'The carModelId is invalid').isMongoId(),
+  check('year', "The year field can't be empty").notEmpty(),
+  check('year', 'The year field must be a number').isInt(),
+  check('description', "The description can't be empty").notEmpty(),
+  check('description', 'The description must be a string').isString(),
+
+  (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return response(req, res, 400, false, errors.array()[0].msg);
+    }
+
+    return next();
+  },
+];
+
+export const checkDeleteCarBrandForm = [
+  param('id', 'The id must be a string').isString(),
+  param('id', 'The id is invalid').isMongoId(),
+
+  (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return response(req, res, 400, false, errors.array()[0].msg);
+    }
+
+    return next();
+  },
+];
