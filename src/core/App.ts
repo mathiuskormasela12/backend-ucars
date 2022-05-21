@@ -38,9 +38,6 @@ namespace AppModule {
 	    this.app.use(express.urlencoded({ extended: false }));
 	    this.app.use(express.json());
 
-	    // setup for static files
-	    this.app.use(express.static(path.join(__dirname, '../../public')));
-
 	    // setup cors
 	    const corsOptions = {
 	      origin(origin: any, callback: any) {
@@ -53,6 +50,9 @@ namespace AppModule {
 	    };
 
 	    this.app.use(cors(corsOptions));
+
+	    // setup for static files
+	    this.app.use(express.static(path.join(__dirname, '../../public')));
 
 	    // setup mongoose
 	    mongoose.connect(appConfig.dbUri, (err: any) => {
