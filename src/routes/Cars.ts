@@ -8,7 +8,12 @@ import carsControlerModule from '../controllers/Cars';
 
 // import all middlewares
 import { isLoggedIn } from '../middlewares/auth';
-import { checkAddCarModelForm } from '../middlewares/cars';
+import {
+  checkAddCarModelForm,
+  checkGetAllCarModelsQueries,
+  checkUpdateCarModelForm,
+  checkDeleteCarModelForm,
+} from '../middlewares/cars';
 
 namespace CarsRoutesModul {
 	export class CarsRoutes extends RouterModule.Router {
@@ -19,6 +24,9 @@ namespace CarsRoutesModul {
 
 	  public routes(): void {
 	    this.expressRouter.post('/model', isLoggedIn, checkAddCarModelForm, carsControlerModule.CarsControllers.addCarModel);
+	    this.expressRouter.get('/model', isLoggedIn, checkGetAllCarModelsQueries, carsControlerModule.CarsControllers.getCarModels);
+	    this.expressRouter.put('/model/:id', isLoggedIn, checkUpdateCarModelForm, carsControlerModule.CarsControllers.updateCarModel);
+	    this.expressRouter.delete('/model/:id', isLoggedIn, checkDeleteCarModelForm, carsControlerModule.CarsControllers.deleteCarModel);
 	  }
 
 	  public get carsRoutes(): ExpressRouter {
