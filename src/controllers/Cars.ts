@@ -116,7 +116,7 @@ namespace CarsControllersModule {
 	    } = req.body;
 
 	    try {
-	      const cars = await Cars.findOne({ carModelId });
+	      const cars = await Cars.findOne({ name });
 
 	      if (cars) {
 	        return response(req, res, 400, false, 'The brand already exists');
@@ -237,11 +237,11 @@ namespace CarsControllersModule {
 	    req: ExpressRequest,
 	    res: ExpressResponse,
 	  ): Promise<ExpressResponse> {
-	    const { page, limit }: any = req.query;
+	    const { page, limit, keywords }: any = req.query;
 	    const startData = Number(limit) * Number(page) - Number(limit);
 
 	    try {
-	      const cars = await Cars.find().skip(startData).limit(limit);
+	      const cars = await Cars.find({ name: { $regex: `.*${keywords.toLowerCase()}.*` } }).skip(startData).limit(limit);
 	      const totalData: number = await Cars.find().count();
 	      const totalPages: number = Math.ceil(totalData / limit);
 

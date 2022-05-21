@@ -77,6 +77,7 @@ export const checkDeleteCarModelForm = [
 export const checkAddCarBrandForm = [
   check('name', "The name can't be empty").notEmpty(),
   check('name', 'The name must be a string').isString(),
+  check('name', 'The name must be a string').toLowerCase(),
   check('carModelId', "The carModelId can't be empty").notEmpty(),
   check('carModelId', 'The carModelId is invalid').isMongoId(),
   check('year', "The year field can't be empty").notEmpty(),
@@ -138,6 +139,8 @@ export const checkGetAllCarBrandsQueries = [
   query('page', 'The page must be an integer').isInt(),
   query('limit').default(5),
   query('limit', 'The limit must be an integer').isInt(),
+  query('keywords').default(''),
+  query('keywords', 'The keyword must be a string').isString(),
 
   (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
     const errors = validationResult(req);
