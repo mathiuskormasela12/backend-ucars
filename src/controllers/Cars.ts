@@ -170,28 +170,28 @@ namespace CarsControllersModule {
 	      if (req.files && req.files.logo) {
 	        const logo: any = upload(req);
 
-	      if (!logo.success) {
-	        return response(req, res, 400, false, logo.message);
-	      }
+	        if (!logo.success) {
+	          return response(req, res, 400, false, logo.message);
+	        }
 
-	      deletFile(`/uploads/${cars.logo}`);
+	        deletFile(`/uploads/${cars.logo}`);
+
+	        try {
+	          await Cars.updateOne({ _id: id }, {
+	            name,
+	            carModelId,
+	            description,
+	            year,
+	            logo: logo.logo,
+	          });
+	          return response(req, res, 200, true, 'The car brand has been updated successfully');
+	        } catch (err: any) {
+	          return response(req, res, 500, false, err.message);
+	        }
+	      }
 
 	      try {
-	        await Cars.updateOne({ id }, {
-	          name,
-	          carModelId,
-	          description,
-	          year,
-	          logo: logo.logo,
-	        });
-	        return response(req, res, 200, true, 'The car brand has been updated successfully');
-	      } catch (err: any) {
-	        return response(req, res, 500, false, err.message);
-	      }
-	      }
-
-	      try {
-	        await Cars.updateOne({ id }, {
+	        await Cars.updateOne({ _id: id }, {
 	          name,
 	          carModelId,
 	          description,
@@ -241,7 +241,7 @@ namespace CarsControllersModule {
 	    const startData = Number(limit) * Number(page) - Number(limit);
 
 	    try {
-	      const cars = await Cars.find({ name: { $regex: `.*${keywords.toLowerCase()}.*` } }).skip(startData).limit(limit);
+	      const cars = await Cars.find({ name: { $regex: `.*${keywords}.*` } }).skip(startData).limit(limit);
 	      const totalData: number = await Cars.find().count();
 	      const totalPages: number = Math.ceil(totalData / limit);
 
