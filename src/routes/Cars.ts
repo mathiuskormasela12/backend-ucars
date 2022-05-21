@@ -17,6 +17,8 @@ import {
   checkAddCarBrandForm,
   checkUpdateCarBrandForm,
   checkDeleteCarBrandForm,
+  checkGetAllCarBrandsQueries,
+  checkGetCarBrandQueries,
 } from '../middlewares/cars';
 
 namespace CarsRoutesModul {
@@ -37,6 +39,8 @@ namespace CarsRoutesModul {
 	    this.expressRouter.post('/brand', isLoggedIn, checkAddCarBrandForm, carsControlerModule.CarsControllers.addCarBrand);
 	    this.expressRouter.put('/brand/:id', isLoggedIn, checkUpdateCarBrandForm, carsControlerModule.CarsControllers.updateCarBrand);
 	    this.expressRouter.delete('/brand/:id', isLoggedIn, checkDeleteCarBrandForm, carsControlerModule.CarsControllers.deleteCarBrand);
+	    this.expressRouter.get('/brand', isLoggedIn, checkGetAllCarBrandsQueries, carsControlerModule.CarsControllers.getCarBrands);
+	    this.expressRouter.get('/brand/:id', isLoggedIn, checkGetCarBrandQueries, carsControlerModule.CarsControllers.getCarBrand);
 	  }
 
 	  public get carsRoutes(): ExpressRouter {

@@ -39,7 +39,7 @@ namespace AppModule {
 	    this.app.use(express.json());
 
 	    // setup for static files
-	    this.app.use(express.static(path.join(__dirname, '../../public/uploads')));
+	    this.app.use(express.static(path.join(__dirname, '../../public')));
 
 	    // setup cors
 	    const corsOptions = {

@@ -132,3 +132,35 @@ export const checkDeleteCarBrandForm = [
     return next();
   },
 ];
+
+export const checkGetAllCarBrandsQueries = [
+  query('page').default(1),
+  query('page', 'The page must be an integer').isInt(),
+  query('limit').default(5),
+  query('limit', 'The limit must be an integer').isInt(),
+
+  (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return response(req, res, 400, false, errors.array()[0].msg);
+    }
+
+    return next();
+  },
+];
+
+export const checkGetCarBrandQueries = [
+  param('id', 'The id must be a string').isString(),
+  param('id', 'The id is invalid').isMongoId(),
+
+  (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return response(req, res, 400, false, errors.array()[0].msg);
+    }
+
+    return next();
+  },
+];
