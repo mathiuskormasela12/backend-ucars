@@ -44,7 +44,7 @@ namespace AuthControllersModule {
 	    try {
 	      const user = await UsersModel.findOne({ username });
 
-	      if (!user || !(bcrypt.compare(password, user.password))) {
+	      if (!user || !(await bcrypt.compare(password, user.password))) {
 	        return response(req, res, 400, false, 'The username or password is wrong');
 	      }
 
