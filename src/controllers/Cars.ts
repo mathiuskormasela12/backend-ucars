@@ -161,7 +161,7 @@ namespace CarsControllersModule {
 	    const { id } = req.params;
 
 	    try {
-	      const cars = await Cars.findOne({ carModelId });
+	      const cars = await Cars.findById(id);
 
 	      if (!cars) {
 	        return response(req, res, 400, false, 'The brand does not exist');
@@ -302,6 +302,7 @@ namespace CarsControllersModule {
 	          _id: cars.id,
 	          name: cars.name,
 	          carModel: carModel.modelName,
+	          carModelId: carModel.id,
 	          logo: appConfig.appUrl.concat('/uploads/', cars.logo),
 	          description: cars.description,
 	          year: cars.year,
