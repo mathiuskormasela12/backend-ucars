@@ -1,6 +1,7 @@
 // ========== Upload
 // import all modules
 import path from 'path';
+import { mkdirSync, existsSync } from 'fs';
 
 export const upload = (req: any) => {
   console.log('ssk =>', req.files);
@@ -36,14 +37,26 @@ export const upload = (req: any) => {
   }
 
   let file = logo.name.split('.')[0];
-  // const ext = logo.name.split('.')[1].toLowerCase();
   file += '-';
   file += Date.now();
   file += '.';
-  // file += ext && ext.length > 0 ? ext : 'jpg';
   file += 'jpg';
 
-  logo.mv(path.join(__dirname, `../../public/uploads/${file}`));
+  const link: string = path.join(__dirname, '../../public');
+
+  if (!existsSync(link)) {
+    mkdirSync(`${link}`);
+
+    if (!existsSync(`${link}/uploads`)) {
+      mkdirSync(`${link}/uploads`);
+    }
+  }
+
+  if (!existsSync(`${link}/uploads`)) {
+    mkdirSync(`${link}/uploads`);
+  }
+
+  logo.mv(`${link}/uploads/${file}`);
 
   return {
     message: 'Your photo has been uploaded',
